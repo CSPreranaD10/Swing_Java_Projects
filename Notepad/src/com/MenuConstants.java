@@ -37,5 +37,5 @@ public interface MenuConstants {
 	final String helpHelpTopic = "Help Topic";
 	final String helpAbout = "About Notepad";
 
-	final String aboutText = "Your Notepad";
+	final String aboutText = "\"<html> Your NotePad <br> Version 0.1.0 (OS Build Java) <br> Thanks for using notepad</html>\"";
 }

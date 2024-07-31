@@ -1,8 +1,10 @@
 package com;
 
 import java.awt.BorderLayout;
+import java.awt.Toolkit;
 import java.awt.event.*;
 import java.util.Date;
+
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -31,6 +33,7 @@ public class Notepad implements ActionListener, MenuConstants {
 		textArea = new JTextArea(30, 60);
 		statusBar = new JLabel("||                 Ln 1, Col 1   ", JLabel.RIGHT);
 
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/icon/notepad_icon.jpg"));
 		frame.add(new JScrollPane(textArea), BorderLayout.CENTER);
 		frame.add(statusBar, BorderLayout.SOUTH);
 		frame.add(new JLabel(" "), BorderLayout.EAST);

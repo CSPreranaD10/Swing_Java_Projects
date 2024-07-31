@@ -1,50 +1,30 @@
 package com;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 public class FindDialog extends JPanel implements ActionListener {
 
 	JTextArea ta;
 	public int lastIndex;
+	private boolean ok;
 
 	private TextField findWhat;
 	private JTextField replaceWith;
-
 	private JCheckBox matchCase;
+	private JDialog dialog;
 
+	JLabel replaceLabel;
 	JRadioButton up, down;
 	JButton findNextButton, replaceButton, replaceAllButton, cancelButton;
-	JLabel replaceLabel;
 	JPanel direction, replaceButtonPanel;
-	private JDialog dialog;
-	private boolean ok;
 
 	// parameterised constructor
 	public FindDialog(JTextArea ta) {
+
 		this.ta = ta;
 		findWhat = new TextField(20);
 		replaceWith = new JTextField(20);
@@ -53,7 +33,6 @@ public class FindDialog extends JPanel implements ActionListener {
 
 		up = new JRadioButton("Up");
 		down = new JRadioButton("Down");
-
 		down.setSelected(true);
 
 		ButtonGroup bGroup = new ButtonGroup();
@@ -96,7 +75,7 @@ public class FindDialog extends JPanel implements ActionListener {
 
 		setLayout(new BorderLayout());
 
-		add(new JLabel(" "), BorderLayout.NORTH);
+		add(new JLabel("              "), BorderLayout.NORTH);
 		add(textPanel, BorderLayout.CENTER);
 		add(replaceButtonPanel, BorderLayout.EAST);
 		add(southPanel, BorderLayout.SOUTH);
@@ -120,8 +99,8 @@ public class FindDialog extends JPanel implements ActionListener {
 				enableDisableButtons();
 			}
 		});
-		findWhat.addTextListener(new TextListener() {
 
+		findWhat.addTextListener(new TextListener() {
 			@Override
 			public void textValueChanged(TextEvent e) {
 				enableDisableButtons();
@@ -130,6 +109,8 @@ public class FindDialog extends JPanel implements ActionListener {
 
 	}
 
+	// enableDisableButtons() method disables the find, replace, replaceAll button
+	// when there is no text in the textbox otherwise it enables the buttons.
 	void enableDisableButtons() {
 		if (findWhat.getText().length() == 0) {
 			findNextButton.setEnabled(false);
@@ -141,6 +122,7 @@ public class FindDialog extends JPanel implements ActionListener {
 			replaceButton.setEnabled(true);
 		}
 	}
+	// End of enableDisableButtons() method
 
 	int findNext() {
 
@@ -179,16 +161,17 @@ public class FindDialog extends JPanel implements ActionListener {
 			ta.setSelectionStart(index);
 			ta.setSelectionEnd(index + findWhat.getText().length());
 		} else {
-			JOptionPane.showMessageDialog(this, "Cannot find " + "\" " + findWhat.getText() + "\"", "Find",
+			JOptionPane.showMessageDialog(this, "Cannot find " + " \" " + findWhat.getText() + " \"", "Find",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
+	// replaceNext() method replaces the selected text with the replaceWith
+	// jtextfield text
 	void replaceNext() {
 		if (ta.getSelectionStart() == ta.getSelectionEnd()) {
 			findNextWithSelection();
 			return;
-
 		}
 
 		String searchText = findWhat.getText();
@@ -198,9 +181,11 @@ public class FindDialog extends JPanel implements ActionListener {
 
 			ta.replaceSelection(replaceWith.getText());
 		findNextWithSelection();
-
 	}
+	// End of replaceNext() method
 
+	// replaceAllNext() method replaces all the occurence of the selected text with
+	// the text user wants to replace
 	int replaceAllNext() {
 		if (up.isSelected())
 			ta.setCaretPosition(ta.getText().length() - 1);
@@ -220,6 +205,7 @@ public class FindDialog extends JPanel implements ActionListener {
 
 		return counter;
 	}
+	// End of replaceAllNext() method
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -233,12 +219,12 @@ public class FindDialog extends JPanel implements ActionListener {
 	}
 
 	public boolean showDialog(Component parent, boolean isFind) {
+
 		Frame owner = null;
 		if (parent instanceof Frame) {
 			owner = (Frame) parent;
 		} else {
 			owner = (Frame) SwingUtilities.getAncestorOfClass(Frame.class, parent);
-
 		}
 		if (dialog == null || dialog.getOwner() != owner) {
 			dialog = new JDialog(owner, false);
@@ -250,7 +236,6 @@ public class FindDialog extends JPanel implements ActionListener {
 			findNextButton.setEnabled(false);
 		else {
 			findNextButton.setEnabled(true);
-
 		}
 
 		replaceButton.setVisible(false);
